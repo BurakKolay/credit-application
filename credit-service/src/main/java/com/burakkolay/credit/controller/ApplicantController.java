@@ -101,32 +101,16 @@ public class ApplicantController {
                             Applied to credit successfully.
                             """+applicant.getCredit().get(applicant.getCredit().size()-1));
         }else{
-             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(CreditResult.WAITING);
+             return ResponseEntity.status(HttpStatus.OK).body(CreditResult.WAITING);
          }
     }
 
     @Async
     @RabbitListener(queues = "credit-queue-2")
     public void listener(Applicant applicant){
-        //ystem.out.println(applicant);
+
 
         applicantRepository.save(applicant);
-        /*
-        Credit credit = applicantService.get;
-        credit= (Credit) applicant.getCredit();
-        if(applicant.getCreditRating()==0){ //0-499
-            credit.setCreditResult("Credit Result : Declined");
-            credit.setCreditBalance(0);
-        }else if(applicant.getCreditRating()==500 && applicant.getMonthlyIncome()<=5000){ // 500-999
-            credit.setCreditResult("Credit Result : Declined");
-            credit.setCreditBalance(10000);
-        }else if(applicant.getCreditRating()==750 && applicant.getMonthlyIncome()>5000){ // 500-999
-            credit.setCreditResult("Credit Result : Approved");
-            credit.setCreditBalance(20000);
-        }else if(applicant.getCreditRating()>750){ // 1000-+
-            credit.setCreditResult("Credit Result : Approved");
-            //credit.setCreditBalance((int) (applicant.getMonthlyIncome()*CREDIT_MULTIPLIER));
-        }*/
         System.out.println(applicant);
     }
 
