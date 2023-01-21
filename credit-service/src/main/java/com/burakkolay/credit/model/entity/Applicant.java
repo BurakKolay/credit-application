@@ -30,8 +30,7 @@ public class Applicant implements Serializable {
 
     private int creditRating;
 
-    //@JsonManagedReference
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
     @OneToMany(cascade = CascadeType.ALL)
     @JsonUnwrapped
     private List<Credit> credit;

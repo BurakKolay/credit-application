@@ -37,7 +37,6 @@ public class Applicant implements Serializable {
     private int creditRating;
 
     @Transient
-    @JsonManagedReference
     @OneToMany
     private List<Credit> credit;
 
