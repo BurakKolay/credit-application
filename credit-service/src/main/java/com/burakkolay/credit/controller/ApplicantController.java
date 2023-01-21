@@ -7,6 +7,7 @@ import com.burakkolay.credit.model.entity.Credit;
 import com.burakkolay.credit.model.entity.CreditResult;
 import com.burakkolay.credit.repository.ApplicantRepository;
 import com.burakkolay.credit.services.ApplicantService;
+import com.burakkolay.credit.services.TwilioService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,15 @@ public class ApplicantController {
 
     private ApplicantService applicantService;
     private RabbitTemplate rabbitTemplate;
+    private TwilioService twilioService;
     private final ApplicantRepository applicantRepository;
 
     public ApplicantController(ApplicantService applicantService, RabbitTemplate rabbitTemplate,
-                               ApplicantRepository applicantRepository) {
+                               ApplicantRepository applicantRepository,TwilioService twilioService) {
         this.applicantService = applicantService;
         this.rabbitTemplate = rabbitTemplate;
         this.applicantRepository = applicantRepository;
+        this.twilioService = twilioService;
     }
 
     @GetMapping("/all")
@@ -78,6 +81,7 @@ public class ApplicantController {
         return ResponseEntity.status(HttpStatus.OK).body("Related applicant updated successfully");
     }
 
+
     //@RabbitListener(queues = "credit-queue-2")
     @PutMapping("/apply/{id}")
     public ResponseEntity applyToCredit(@PathVariable(name = "id") Long applicantId){
@@ -87,7 +91,7 @@ public class ApplicantController {
         applicantService.applyToCredit(applicantId);
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,RabbitMQConfig.ROUTING_KEY,applicant);
 
-
+        twilioService.sendSMS(applicant);
 
          if (Objects.equals(applicant.getCredit().get(applicant.getCredit().size()-1).getCreditResult(), CreditResult.ACCEPTED)) {
              System.out.println("Applied to credit success");
@@ -109,8 +113,8 @@ public class ApplicantController {
     @RabbitListener(queues = "credit-queue-2")
     public void listener(Applicant applicant){
 
-
         applicantRepository.save(applicant);
+        //twilioService.sendSMS(applicant);
         System.out.println(applicant);
     }
 

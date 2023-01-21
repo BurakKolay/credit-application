@@ -2,14 +2,12 @@ package com.burakkolay.credit.services;
 
 
 import com.burakkolay.credit.exception.ApplicantNotFoundException;
-import com.burakkolay.credit.exception.CreditException;
 import com.burakkolay.credit.exception.EntityNotFoundException;
 import com.burakkolay.credit.model.entity.Applicant;
 import com.burakkolay.credit.model.entity.Credit;
 import com.burakkolay.credit.model.DTO.ApplicantDTO;
 import com.burakkolay.credit.model.entity.CreditResult;
 import com.burakkolay.credit.model.mapper.ApplicantMapper;
-import com.burakkolay.credit.model.mapper.ApplicantMapperImpl;
 import com.burakkolay.credit.repository.ApplicantRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
