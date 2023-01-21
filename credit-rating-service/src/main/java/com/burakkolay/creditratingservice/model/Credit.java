@@ -22,9 +22,5 @@ public class Credit {
     @Transient
     private String creditResult;
 
-    @ToString.Exclude
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private Applicant applicant;
 
 }

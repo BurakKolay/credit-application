@@ -19,12 +19,5 @@ public class Credit implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int creditBalance;
-
     private CreditResult creditResult;
-
-
-    //@JsonBackReference
-
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 }
