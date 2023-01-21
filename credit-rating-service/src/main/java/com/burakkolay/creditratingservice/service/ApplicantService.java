@@ -28,21 +28,14 @@ public class ApplicantService {
     @RabbitListener(queues = "credit-queue")
     public void processMessage(Applicant applicant){
         applicant.setCreditRating(750);
-//        for (Credit credit:applicant.getCredit()) {
-//            creditRepository.save(credit);
-//        }
 
-
-        for (Credit credit:applicant.getCredit()) {
-            creditRepository.save(credit);
-        }
-//        Thread.sleep(2000);
         Applicant copyApplicant = applicant.deepCopy(applicant);
 
-        applicantRepository.save(copyApplicant);
-        sendMessage(applicant);
-//       return applicantRepository.save(applicant);
+        creditRepository.saveAll(applicant.getCredit());
 
+        applicantRepository.save(copyApplicant);
+
+        sendMessage(applicant);
     }
 
     public void sendMessage(Applicant applicant){
