@@ -22,16 +22,13 @@ import java.util.List;
 public class CreditController {
 
     private CreditService creditService;
-    private ApplicantService applicantService;
-    private CreditMapper creditMapper;
-    private ApplicantRepository applicantRepository;
 
-    @Autowired
-    public CreditController(CreditService creditService, ApplicantService applicantService, CreditMapper creditMapper, ApplicantRepository applicantRepository) {
+    private ApplicantService applicantService;
+
+
+    public CreditController(CreditService creditService, ApplicantService applicantService) {
         this.creditService = creditService;
         this.applicantService = applicantService;
-        this.creditMapper = creditMapper;
-        this.applicantRepository = applicantRepository;
     }
 
     @GetMapping("/all")
@@ -57,25 +54,18 @@ public class CreditController {
 
     @PostMapping("/create/{id}")
     public ResponseEntity createCredit(@RequestBody CreditDTO creditDTO, @PathVariable("id") Long id){
-        Applicant applicant = applicantService.getById(id);
-        Credit credit = creditMapper.toCredit(creditDTO);
-        List<Credit> credits=applicant.getCredit();
-        credits.add(credit);
-        applicant.setCredit(credits);
-        applicantRepository.save(applicant);
-
+       Applicant applicant =  applicantService.setCreditToApplicant(id, creditDTO);
         if(applicant.getCredit()==null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Credit could not be created successfully");
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(credit);
+        return ResponseEntity.status(HttpStatus.CREATED).body(applicant.getCredit().get(applicant.getCredit().size()-1));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity deleteCredit(@PathVariable(name = "id") Long id) {
         creditService.delete(id);
-
         return ResponseEntity.status(HttpStatus.OK).body("Related credit deleted successfully");
     }
 }

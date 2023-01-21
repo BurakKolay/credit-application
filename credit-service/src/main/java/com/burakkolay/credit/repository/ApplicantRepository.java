@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ApplicantRepository extends JpaRepository<Applicant,Long> {
 
-    // getting rid of the optional
+
     @Query(value = "SELECT id FROM applicant WHERE applicant.identification_number=:identificationNumber",nativeQuery = true)
     Long getApplicantByIdentificationNumber(@Param("identificationNumber") Long identificationNumber);
 

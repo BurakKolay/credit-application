@@ -3,20 +3,26 @@ package com.burakkolay.credit.services;
 
 import com.burakkolay.credit.exception.ApplicantNotFoundException;
 import com.burakkolay.credit.exception.EntityNotFoundException;
+import com.burakkolay.credit.model.DTO.CreditDTO;
 import com.burakkolay.credit.model.entity.Applicant;
 import com.burakkolay.credit.model.entity.Credit;
 import com.burakkolay.credit.model.DTO.ApplicantDTO;
 import com.burakkolay.credit.model.entity.CreditResult;
 import com.burakkolay.credit.model.mapper.ApplicantMapper;
+import com.burakkolay.credit.model.mapper.CreditMapper;
 import com.burakkolay.credit.repository.ApplicantRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -25,13 +31,16 @@ public class ApplicantService {
 
     private final ApplicantRepository applicantRepository;
     private final CreditService creditService;
+    private final CreditMapper creditMapper;
     private final ApplicantMapper applicantMapper;
+
     private final int CREDIT_MULTIPLIER=4;
 
     @Autowired
-    public ApplicantService(ApplicantRepository applicantRepository, CreditService creditService, ApplicantMapper applicantMapper) {
+    public ApplicantService(ApplicantRepository applicantRepository, CreditService creditService, CreditMapper creditMapper, ApplicantMapper applicantMapper) {
         this.applicantRepository = applicantRepository;
         this.creditService = creditService;
+        this.creditMapper = creditMapper;
         this.applicantMapper = applicantMapper;
     }
 
@@ -95,28 +104,45 @@ public class ApplicantService {
             return new ApplicantNotFoundException("Applicant", id);
         }));
     }
-    /* TODO */
+
     public void applyToCredit(@RequestParam(name = "id") Long applicantId) {
             Credit credit = creditService.create();
-            //int creditRatingEvaluation=creditService.gradeMap.floorEntry(applicant.getCreditRating().getCreditRating()).getValue();
-        /*
-            int creditRatingEvaluation=500;
-            if(creditRatingEvaluation==0){ //0-499
-                credit.setCreditResult("Credit Result : Declined");
-                credit.setCreditBalance(0);
-            }else if(creditRatingEvaluation==1 && applicant.getMonthlyIncome()<=5000){ // 500-999
-                credit.setCreditResult("Credit Result : Approved");
-                credit.setCreditBalance(10000);
-            }else if(creditRatingEvaluation==1 && applicant.getMonthlyIncome()>5000){ // 500-999
-                credit.setCreditResult("Credit Result : Approved");
-                credit.setCreditBalance(20000);
-            }else if(creditRatingEvaluation>1){ // 1000-+
-                credit.setCreditResult("Credit Result : Approved");
-                credit.setCreditBalance((int) (applicant.getMonthlyIncome()*CREDIT_MULTIPLIER));
-            }
-
-            // imaginary sms sent to customer here !
-            creditService.sendSMS(applicant.getPhoneNumber());*/
              addCreditToApplicant(credit,applicantId);
     }
+
+
+    @RabbitListener(queues = "credit-queue-2")
+    public void listener(Applicant applicant){
+        applicantRepository.save(applicant);
+    }
+
+    public ResponseEntity creditResultResponse(Applicant applicant){
+        if (Objects.equals(applicant.getCredit().get(applicant.getCredit().size()-1).getCreditResult(), CreditResult.ACCEPTED)) {
+            System.out.println("Applied to credit success");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("""
+                            Applied to credit successfully.
+                            """+applicant.getCredit().get(applicant.getCredit().size()-1));
+        } else if(Objects.equals(applicant.getCredit().get(applicant.getCredit().size()-1).getCreditResult(), CreditResult.DENIED)) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("""
+                            Applied to credit successfully.
+                            """+applicant.getCredit().get(applicant.getCredit().size()-1));
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(CreditResult.WAITING);
+        }
+    }
+
+    public Applicant setCreditToApplicant(Long id,CreditDTO creditDTO){
+        Applicant applicant = getById(id);
+        Credit credit = creditMapper.toCredit(creditDTO);
+        List<Credit> credits=applicant.getCredit();
+        credits.add(credit);
+        applicant.setCredit(credits);
+       return applicantRepository.save(applicant);
+    }
+
+
+
+
 }

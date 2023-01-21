@@ -1,7 +1,6 @@
 package com.burakkolay.credit.services;
 
 import com.burakkolay.credit.exception.EntityNotFoundException;
-import com.burakkolay.credit.interfaces.SMSInterface;
 import com.burakkolay.credit.model.entity.Credit;
 import com.burakkolay.credit.repository.CreditRepository;
 
@@ -11,20 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeMap;
 
 @Slf4j
 @Service
-public class CreditService implements SMSInterface {
-
-    public static TreeMap<Integer, Integer> gradeMap = new TreeMap<>();
-    static {
-        gradeMap.put(0,0); //0-499
-        gradeMap.put(500,1); //500-999
-        gradeMap.put(1000,2); //1000-1899
-        gradeMap.put(1900,3); //1900-+
-    }
-
+public class CreditService {
     private final CreditRepository creditRepository;
 
 
@@ -56,8 +45,4 @@ public class CreditService implements SMSInterface {
         creditRepository.deleteById(id);
     }
 
-    @Override
-    public String sendSMS(String phoneNumber) {
-        return "Credit result SMS sent to registered phone number: "+phoneNumber;
-    }
 }

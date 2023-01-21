@@ -28,15 +28,11 @@ public class ApplicantController {
 
     private ApplicantService applicantService;
     private RabbitTemplate rabbitTemplate;
-    private TwilioService twilioService;
-    private final ApplicantRepository applicantRepository;
 
-    public ApplicantController(ApplicantService applicantService, RabbitTemplate rabbitTemplate,
-                               ApplicantRepository applicantRepository,TwilioService twilioService) {
+
+    public ApplicantController(ApplicantService applicantService, RabbitTemplate rabbitTemplate) {
         this.applicantService = applicantService;
         this.rabbitTemplate = rabbitTemplate;
-        this.applicantRepository = applicantRepository;
-        this.twilioService = twilioService;
     }
 
     @GetMapping("/all")
@@ -86,37 +82,14 @@ public class ApplicantController {
     @PutMapping("/apply/{id}")
     public ResponseEntity applyToCredit(@PathVariable(name = "id") Long applicantId){
 
-        //applicantService.applyToCredit(applicantId);
         Applicant applicant=applicantService.getById(applicantId);
         applicantService.applyToCredit(applicantId);
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,RabbitMQConfig.ROUTING_KEY,applicant);
 
-        twilioService.sendSMS(applicant);
-
-         if (Objects.equals(applicant.getCredit().get(applicant.getCredit().size()-1).getCreditResult(), CreditResult.ACCEPTED)) {
-             System.out.println("Applied to credit success");
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("""
-                            Applied to credit successfully.
-                            """+applicant.getCredit().get(applicant.getCredit().size()-1));
-        } else if(Objects.equals(applicant.getCredit().get(applicant.getCredit().size()-1).getCreditResult(), CreditResult.DENIED)) {
-             return ResponseEntity.status(HttpStatus.OK)
-                     .body("""
-                            Applied to credit successfully.
-                            """+applicant.getCredit().get(applicant.getCredit().size()-1));
-        }else{
-             return ResponseEntity.status(HttpStatus.OK).body(CreditResult.WAITING);
-         }
+       return applicantService.creditResultResponse(applicant);
     }
 
-    @Async
-    @RabbitListener(queues = "credit-queue-2")
-    public void listener(Applicant applicant){
 
-        applicantRepository.save(applicant);
-        //twilioService.sendSMS(applicant);
-        System.out.println(applicant);
-    }
 
 
 }
