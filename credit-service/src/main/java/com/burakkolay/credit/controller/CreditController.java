@@ -1,30 +1,24 @@
 package com.burakkolay.credit.controller;
 
 
+import com.burakkolay.credit.model.DTO.CreditDTO;
 import com.burakkolay.credit.model.entity.Applicant;
 import com.burakkolay.credit.model.entity.Credit;
-import com.burakkolay.credit.model.DTO.CreditDTO;
-import com.burakkolay.credit.model.mapper.CreditMapper;
-import com.burakkolay.credit.repository.ApplicantRepository;
 import com.burakkolay.credit.services.ApplicantService;
 import com.burakkolay.credit.services.CreditService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/credit")
 public class CreditController {
 
-    private CreditService creditService;
+    private final CreditService creditService;
 
-    private ApplicantService applicantService;
-
+    private final ApplicantService applicantService;
 
     public CreditController(CreditService creditService, ApplicantService applicantService) {
         this.creditService = creditService;
@@ -33,9 +27,10 @@ public class CreditController {
 
     @GetMapping("/all")
     public ResponseEntity getAllCredits(){
-        List<Credit> allCredits = creditService.getAllCredits();
 
+        List<Credit> allCredits = creditService.getAllCredits();
         return ResponseEntity.ok(allCredits);
+
     }
 
     @GetMapping("/id")

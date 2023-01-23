@@ -2,7 +2,6 @@ package com.burakkolay.credit.exception.handler;
 
 
 import com.burakkolay.credit.exception.ApplicantNotFoundException;
-import com.burakkolay.credit.exception.CustomJwtException;
 import com.burakkolay.credit.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,20 +32,6 @@ public class GenericExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseMap);
     }
 
-    @ExceptionHandler(CustomJwtException.class)
-    public ResponseEntity<Map<String, String>> handleCustomJwtException(CustomJwtException exception) {
-        Map<String, String> errorResponseMap = new HashMap<>();
-        errorResponseMap.put("error_message", exception.getMessage());
-        errorResponseMap.put("error_status", exception.getHttpStatus().toString());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponseMap);
-    }
-
-//    @ExceptionHandler(AccessDeniedException.class)
-//    public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException exception) {
-//        Map<String, String> errorResponseMap = new HashMap<>();
-//        errorResponseMap.put("error_message", exception.getMessage());
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponseMap);
-//    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleEntityNotFoundException(Exception exception) {

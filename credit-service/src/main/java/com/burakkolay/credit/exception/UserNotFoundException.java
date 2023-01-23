@@ -1,7 +1,6 @@
 package com.burakkolay.credit.exception;
 
 import lombok.Data;
-import org.springframework.data.crossstore.ChangeSetPersister;
 
 @Data
 public class  UserNotFoundException extends RuntimeException {

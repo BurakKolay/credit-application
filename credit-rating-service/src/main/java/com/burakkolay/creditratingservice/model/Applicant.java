@@ -1,9 +1,7 @@
 package com.burakkolay.creditratingservice.model;
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,7 +39,8 @@ public class Applicant implements Serializable {
     private List<Credit> credit;
 
     public Applicant deepCopy(Applicant applicant){
-        Applicant applicant1 = new Applicant(applicant.getId(),
+
+        return new Applicant(applicant.getId(),
                 applicant.getIdentificationNumber(),
                 applicant.getFirstName(),
                 applicant.getLastName(),
@@ -49,8 +48,6 @@ public class Applicant implements Serializable {
                 applicant.getPhoneNumber(),
                 applicant.getCreditRating(),
                 applicant.getCredit());
-
-        return applicant1;
     }
 
 

@@ -23,8 +23,7 @@ public class CreditService {
     }
 
     public List<Credit> getAllCredits() {
-        List<Credit> allCredits = creditRepository.findAll();
-        return allCredits;
+        return creditRepository.findAll();
     }
     
     public Credit getById(Long id) {

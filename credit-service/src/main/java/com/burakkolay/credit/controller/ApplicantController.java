@@ -3,22 +3,13 @@ package com.burakkolay.credit.controller;
 import com.burakkolay.credit.config.RabbitMQConfig;
 import com.burakkolay.credit.model.entity.Applicant;
 import com.burakkolay.credit.model.DTO.ApplicantDTO;
-import com.burakkolay.credit.model.entity.Credit;
-import com.burakkolay.credit.model.entity.CreditResult;
-import com.burakkolay.credit.repository.ApplicantRepository;
 import com.burakkolay.credit.services.ApplicantService;
-import com.burakkolay.credit.services.TwilioService;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -78,7 +69,6 @@ public class ApplicantController {
     }
 
 
-    //@RabbitListener(queues = "credit-queue-2")
     @PutMapping("/apply/{id}")
     public ResponseEntity applyToCredit(@PathVariable(name = "id") Long applicantId){
 
@@ -86,7 +76,7 @@ public class ApplicantController {
         applicantService.applyToCredit(applicantId);
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,RabbitMQConfig.ROUTING_KEY,applicant);
 
-       return applicantService.creditResultResponse(applicant);
+        return applicantService.creditResultResponse(applicant);
     }
 
 
