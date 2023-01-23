@@ -1,8 +1,6 @@
 package com.burakkolay.credit.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,6 +16,7 @@ public class Credit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int creditBalance;
+    private double creditBalance;
     private CreditResult creditResult;
+    private double assurance;
 }

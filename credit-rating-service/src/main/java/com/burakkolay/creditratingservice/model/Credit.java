@@ -1,13 +1,12 @@
 package com.burakkolay.creditratingservice.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,9 +17,11 @@ public class Credit {
     @Id
     private Long id;
     @Transient
-    private int creditBalance;
+    private double creditBalance;
     @Transient
     private String creditResult;
+    @Transient
+    private double assurance;
 
 
 }
