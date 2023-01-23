@@ -11,11 +11,16 @@ import com.burakkolay.credit.model.entity.CreditResult;
 import com.burakkolay.credit.model.mapper.ApplicantMapper;
 import com.burakkolay.credit.model.mapper.CreditMapper;
 import com.burakkolay.credit.repository.ApplicantRepository;
+import com.burakkolay.credit.repository.CreditRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,27 +32,28 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@EnableScheduling
+@EnableAsync
 public class ApplicantService {
-
+    private final CreditRepository creditRepository;
     private final ApplicantRepository applicantRepository;
     private final CreditService creditService;
     private final CreditMapper creditMapper;
     private final ApplicantMapper applicantMapper;
+    private final CreditResulterFacade creditResulterFacade;
 
-    private final int CREDIT_MULTIPLIER=4;
 
-    @Autowired
-    public ApplicantService(ApplicantRepository applicantRepository, CreditService creditService, CreditMapper creditMapper, ApplicantMapper applicantMapper) {
+    public ApplicantService(CreditRepository creditRepository, ApplicantRepository applicantRepository, CreditService creditService, CreditMapper creditMapper, ApplicantMapper applicantMapper, CreditResulterFacade creditResulterFacade) {
+        this.creditRepository = creditRepository;
         this.applicantRepository = applicantRepository;
         this.creditService = creditService;
         this.creditMapper = creditMapper;
         this.applicantMapper = applicantMapper;
+        this.creditResulterFacade = creditResulterFacade;
     }
 
-
     public List<Applicant> getAllApplicants() {
-        List<Applicant> allApplicants = applicantRepository.findAll();
-        return allApplicants;
+        return applicantRepository.findAll();
     }
 
     public Applicant getById(Long id) {
@@ -75,11 +81,12 @@ public class ApplicantService {
         if (getById(applicantId)==null)
             throw new ApplicantNotFoundException("Applicant",applicantId);
 
-           log.debug("Applicant credit : " + byId.getCredit());
-            List<Credit> credits=byId.getCredit();
-            credit.setCreditResult(CreditResult.WAITING);
-            credits.add(credit);
-            byId.setCredit(credits);
+        log.debug("Applicant credit : " + byId.getCredit());
+        List<Credit> credits=byId.getCredit();
+        credit.setCreditResult(CreditResult.WAITING);
+        credits.add(credit);
+        byId.setCredit(credits);
+        System.out.println(byId);
 
     }
 
@@ -107,7 +114,7 @@ public class ApplicantService {
 
     public void applyToCredit(@RequestParam(name = "id") Long applicantId) {
             Credit credit = creditService.create();
-             addCreditToApplicant(credit,applicantId);
+            addCreditToApplicant(credit,applicantId);
     }
 
 
@@ -142,7 +149,14 @@ public class ApplicantService {
        return applicantRepository.save(applicant);
     }
 
-
-
+    @Scheduled(cron = "*/5 * * * * *")
+    @Async
+    public void creditResult(){
+        List<Credit> allCreditWaiting = creditRepository.getAllCreditWaiting();
+        for (Credit credit:allCreditWaiting) {
+            Applicant applicantFromCreditId = applicantRepository.getApplicantFromCreditId(credit.getId());
+            creditRepository.save(creditResulterFacade.creditResulter(credit,applicantFromCreditId));
+        }
+    }
 
 }
