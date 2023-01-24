@@ -41,7 +41,7 @@ public class CreditService {
 
     public void delete(Long id) {
         getById(id);
-        creditRepository.deleteById(id);
+        creditRepository.delete(getById(id));
     }
 
 }
