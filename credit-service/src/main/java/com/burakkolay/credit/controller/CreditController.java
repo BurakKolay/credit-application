@@ -9,6 +9,8 @@ import com.burakkolay.credit.services.CreditService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -60,7 +62,23 @@ public class CreditController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity deleteCredit(@PathVariable(name = "id") Long id) {
-        creditService.delete(id);
+        //creditService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Related credit deleted successfully");
+    }
+
+    /*******************************************************************************************/
+
+    @GetMapping("/showList")
+    public ModelAndView showCreditList(){
+        ModelAndView mav = new ModelAndView("list-credits");
+        mav.addObject("credits",creditService.getAllCredits());
+        return mav;
+    }
+
+    @RequestMapping(path = "/deleteCredit")
+    public RedirectView deleteApplicant(@RequestParam Long creditId){
+        creditService.delete(creditId);
+        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/credit/showList");
+        return redirectView;
     }
 }
