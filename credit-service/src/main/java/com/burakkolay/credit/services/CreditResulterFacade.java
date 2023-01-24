@@ -42,7 +42,7 @@ public class CreditResulterFacade {
             credit.setCreditResult(CreditResult.DENIED);
         }
 
-        twilioService.sendSMS(applicant,credit);
+        //twilioService.sendSMS(applicant,credit);
         return credit;
     }
 
