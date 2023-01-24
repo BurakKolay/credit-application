@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Owners</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container" style="max-width: 1340px">
+    <h2>List of Applicants</h2>
+    <hr/>
+    <a th:href="@{/api/v1/applicant/addApplicantForm}" class="btn btn-primary mb-2">Add Applicant</a>
+    <table class="table table-striped" id="applicant">
+
+        <thead>
+
+        <tr>
+            <th>ID</th>
+            <th>Identification Number</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Salary</th>
+            <th style="text-align: center">Date of Birth</th>
+            <th>Phone Number</th>
+            <th style="text-align: center">Credit Rating</th>
+            <th style="text-align: center">Actions</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        <tr th:each="applicant: ${applicants}">
+            <td th:text="${applicant.id}"/>
+            <td th:text="${applicant.identificationNumber}"/>
+            <td th:text="${applicant.firstName}"/>
+            <td th:text="${applicant.lastName}"/>
+            <td th:text="${applicant.monthlyIncome}"/>
+            <td style="text-align: center" th:text="${applicant.dateOfBirth}"></td>
+            <td th:text="${applicant.phoneNumber}"/>
+            <td style="text-align: center" th:text="${applicant.creditRating}"/>
+
+
+            <td>
+                <a th:href="@{/api/v1/applicant/showUpdateForm(applicantId=${applicant.id})}" class="btn btn-info">Update</a>
+                <a th:href="@{/api/v1/applicant/deleteApplicant(applicantId=${applicant.id})}" class="btn btn-info">Delete</a>
+<!--                <a th:href="@{/api/v1/pet/addPetForm(id=${owner.id})}" class="btn btn-info">Add Pet</a>-->
+<!--                <a th:href="@{/api/v1/pet/showOwnerPetsForm(id=${owner.id})}" class="btn btn-info">Show Pets</a>-->
+            </td>
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
+<script>
+    $(document).ready(function (){
+        $("#applicant").DataTable();
+    })
+</script>
+</body>
+</html>

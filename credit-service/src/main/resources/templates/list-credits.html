@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>List of Owners</title>
+  <link rel="stylesheet"
+        type="text/css"
+        href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
+
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+</head>
+<body>
+<div class="container" style="max-width: 1340px">
+  <h2>List of Credits</h2>
+  <hr/>
+  <a th:href="@{/api/v1/credit/addCreditForm}" class="btn btn-primary mb-2">Add Credit</a>
+  <table class="table table-striped" id="applicant">
+
+    <thead>
+
+    <tr>
+      <th>ID</th>
+      <th>Assurance</th>
+      <th>Credit Balance</th>
+      <th>Credit Result</th>
+      <th>Created Date</th>
+      <th style="text-align: center">Actions</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+    <tr th:each="credit: ${credits}">
+      <td th:text="${credit.id}"/>
+      <td th:text="${credit.assurance}"/>
+      <td th:text="${credit.creditBalance}"/>
+      <td th:text="${credit.creditResult}"/>
+      <td type="date" pattern="yyyy-MM-dd" th:text="${credit.creationDate}"/>
+
+
+      <td>
+<!--        <a th:href="@{/api/v1/applicant/showUpdateForm(applicantId=${applicant.id})}" class="btn btn-info">Update</a>-->
+        <a th:href="@{/api/v1/credit/deleteCredit(creditId=${credit.id})}" class="btn btn-info">Delete</a>
+        <!--                <a th:href="@{/api/v1/pet/addPetForm(id=${owner.id})}" class="btn btn-info">Add Pet</a>-->
+        <!--                <a th:href="@{/api/v1/pet/showOwnerPetsForm(id=${owner.id})}" class="btn btn-info">Show Pets</a>-->
+      </td>
+    </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
+<script>
+  $(document).ready(function (){
+    $("#credit").DataTable();
+  })
+</script>
+</body>
+</html>
