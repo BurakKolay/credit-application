@@ -1,16 +1,15 @@
 package com.burakkolay.creditratingservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "credit")
 public class Credit {
@@ -22,6 +21,10 @@ public class Credit {
     private String creditResult;
     @Transient
     private double assurance;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Timestamp creationDate;
 
 
 }
