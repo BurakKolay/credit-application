@@ -7,12 +7,15 @@ import com.burakkolay.credit.services.ApplicantService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/api/v1/applicant")
 public class ApplicantController {
 
@@ -57,7 +60,7 @@ public class ApplicantController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteApplicant(@PathVariable(name = "id") Long id) {
+    public ResponseEntity deleteApplicantWithResponse(@PathVariable(name = "id") Long id) {
         applicantService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Related applicant deleted successfully");
     }
@@ -69,17 +72,57 @@ public class ApplicantController {
     }
 
 
-    @PutMapping("/apply/{id}")
-    public ResponseEntity applyToCredit(@PathVariable(name = "id") Long applicantId){
+    @PutMapping(value = {"/apply/{id}/{assurance}","/apply/{id}"})
+    public ResponseEntity applyToCredit(@PathVariable(name = "id") Long applicantId,@PathVariable(name = "assurance",required = false) Double assurance){
 
         Applicant applicant=applicantService.getById(applicantId);
-        applicantService.applyToCredit(applicantId);
+        applicantService.applyToCredit(applicantId,assurance);
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,RabbitMQConfig.ROUTING_KEY,applicant);
-
         return applicantService.creditResultResponse(applicant);
     }
+    /*******************************************************************************************************/
 
+    @GetMapping("/showList")
+    public ModelAndView showApplicantList(){
+        ModelAndView mav = new ModelAndView("list-applicants");
+        mav.addObject("applicants",applicantService.getAllApplicants());
+        return mav;
+    }
 
+    @GetMapping("/addApplicantForm")
+    public ModelAndView addNewApplicantForm(){
+        ModelAndView mav = new ModelAndView("add-applicant-form");
+        Applicant applicant = new Applicant();
+        mav.addObject("applicant",applicant);
+        return mav;
+    }
 
+    @PostMapping("/saveApplicant")
+    public RedirectView saveApplicant(@ModelAttribute ApplicantDTO applicantDTO){
+        applicantService.create(applicantDTO);
+        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/applicant/showList");
+        return redirectView;
+    }
 
+    @RequestMapping(path = "/deleteApplicant")
+    public RedirectView deleteApplicant(@RequestParam Long applicantId){
+        applicantService.delete(applicantId);
+        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/applicant/showList");
+        return redirectView;
+    }
+
+    @GetMapping("/showUpdateForm")
+    public ModelAndView showUpdateForm(@RequestParam Long applicantId){
+        ModelAndView mav = new ModelAndView("update-applicant-form");
+        Applicant applicant = applicantService.getById(applicantId);
+        mav.addObject("applicant",applicant);
+        return mav;
+    }
+
+    @RequestMapping(path = "/updateApplicant/{applicantId}")
+    public RedirectView updateOwner(@PathVariable("applicantId")Long applicantId,@ModelAttribute ApplicantDTO applicantDTO){
+        applicantService.update(applicantDTO,applicantId);
+        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/applicant/showList");
+        return redirectView;
+    }
 }
