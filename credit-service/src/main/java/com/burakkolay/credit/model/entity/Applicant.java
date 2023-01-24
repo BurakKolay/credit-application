@@ -1,12 +1,12 @@
 package com.burakkolay.credit.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 
@@ -26,11 +26,15 @@ public class Applicant implements Serializable {
     private String lastName;
     private double monthlyIncome;
     private String phoneNumber;
-
     private int creditRating;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JsonUnwrapped
+    @JsonFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dateOfBirth;
+
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "applicant_id")
+    //@JsonManagedReference
     private List<Credit> credit;
 
 }
