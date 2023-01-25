@@ -21,10 +21,13 @@ public class Applicant implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private Long identificationNumber;
     private String firstName;
     private String lastName;
     private double monthlyIncome;
+    @Column(unique = true)
     private String phoneNumber;
     private int creditRating;
 
@@ -34,7 +37,6 @@ public class Applicant implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "applicant_id")
-    //@JsonManagedReference
     private List<Credit> credit;
 
 }
