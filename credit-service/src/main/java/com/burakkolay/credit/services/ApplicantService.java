@@ -76,8 +76,8 @@ public class ApplicantService {
     }
 
     public void addCreditToApplicant(Credit credit, Long applicantId) {
-        Applicant byId = getById(applicantId);
-        if (getById(applicantId)==null)
+        Applicant byId = getByIdentificationNumber(applicantId);
+        if (getByIdentificationNumber(applicantId)==null)
             throw new ApplicantNotFoundException("Applicant",applicantId);
 
         log.debug("Applicant credit : " + byId.getCredit());
@@ -87,7 +87,14 @@ public class ApplicantService {
         byId.setCredit(credits);
         creditRepository.save(credit);
         System.out.println(byId);
+    }
 
+    public void applyCreditToApplicant(Long id,double assurance){
+        Applicant applicant = getByIdentificationNumber(id);
+        Credit credit = creditService.create();
+        //if(assurance==null) assurance=0.0;
+        credit.setAssurance(assurance);
+        addCreditToApplicant(credit,id);
     }
 
     public Applicant update(ApplicantDTO applicantDTO,Long id){
@@ -102,14 +109,10 @@ public class ApplicantService {
         return applicantRepository.save(byId);
     }
 
-    public Optional<Applicant> getByIdentificationNumber(Long identificationNumber){
+    public Applicant getByIdentificationNumber(Long identificationNumber){
 
-        Long id = applicantRepository.getApplicantByIdentificationNumber(identificationNumber);
-        Optional<Applicant> byIdentificationNumber=applicantRepository.findById(id);
-        return Optional.ofNullable(byIdentificationNumber.orElseThrow(() -> {
-            log.error("Applicant not found by identification number : " + id);
-            return new ApplicantNotFoundException("Applicant", id);
-        }));
+        Applicant applicant = applicantRepository.getApplicantByIdentificationNumber(identificationNumber);
+        return applicant;
     }
 
     public void applyToCredit(Long applicantId,Double assurance) {
