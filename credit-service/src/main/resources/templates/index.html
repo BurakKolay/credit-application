@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Credit Center</title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
+        rel="stylesheet">
+  <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet"/>
+</head>
+<!--<body th:style="'background:url('+ @{/images/v.jpg} +');'">-->
+
+<div class="center-screen">
+  <center>  <h1 class="form-signin-heading" style="color:white;">Welcome to Credit Center</h1> </center>
+  <form class="form-signin" method="get" th:action="@{/api/v1/applicant/showList}">
+    <div class="form-group">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Admin Panel</button>
+    </div>
+  </form>
+  <form class="form-signin" method="get" th:action="@{/api/v1/applicant/addApplicantForm}">
+    <div class="form-group">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    </div>
+  </form>
+  <form class="form-signin" method="get" th:action="@{/api/v1/applicant/addCreditForm}">
+    <div class="form-group">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Apply to credit</button>
+    </div>
+  </form>
+  <form class="form-signin" method="get" th:action="@{/api/v1/applicant/showCreditForm}">
+    <div class="form-group">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Find credit</button>
+    </div>
+  </form>
+</div>
+</body>
+</html>
