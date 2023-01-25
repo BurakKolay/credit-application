@@ -14,7 +14,7 @@
     <hr/>
     <form th:action="@{/api/v1/applicant/saveApplicant}" th:object="${applicant}" method="POST">
 
-        <input type="text" th:field="*{identificationNumber}" placeholder="Enter identification number" class="form-control col-4 mb-4" />
+        <input type="text" min="11" max="11" th:field="*{identificationNumber}" placeholder="Enter identification number" class="form-control col-4 mb-4" />
 
         <input type="text" th:field="*{firstName}" placeholder="Enter first name" class="form-control col-4 mb-4" />
 
