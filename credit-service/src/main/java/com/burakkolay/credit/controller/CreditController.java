@@ -4,6 +4,7 @@ package com.burakkolay.credit.controller;
 import com.burakkolay.credit.model.DTO.CreditDTO;
 import com.burakkolay.credit.model.entity.Applicant;
 import com.burakkolay.credit.model.entity.Credit;
+import com.burakkolay.credit.model.entity.TemporaryObject;
 import com.burakkolay.credit.services.ApplicantService;
 import com.burakkolay.credit.services.CreditService;
 import org.springframework.http.HttpStatus;
@@ -60,11 +61,11 @@ public class CreditController {
         return ResponseEntity.status(HttpStatus.CREATED).body(applicant.getCredit().get(applicant.getCredit().size()-1));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteCredit(@PathVariable(name = "id") Long id) {
-        //creditService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Related credit deleted successfully");
-    }
+//    @DeleteMapping("/delete/{id}")
+//    public ResponseEntity deleteCredit2(@PathVariable(name = "id") Long id) {
+//        //creditService.delete(id);
+//        return ResponseEntity.status(HttpStatus.OK).body("Related credit deleted successfully");
+//    }
 
     /*******************************************************************************************/
 
@@ -76,9 +77,32 @@ public class CreditController {
     }
 
     @RequestMapping(path = "/deleteCredit")
-    public RedirectView deleteApplicant(@RequestParam Long creditId){
+    public RedirectView deleteCredit(@RequestParam Long creditId){
         creditService.delete(creditId);
         RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/credit/showList");
         return redirectView;
     }
+
+    @GetMapping("/getCreditByIdAndBirth")
+    public RedirectView getCreditByIdAndBirth(@ModelAttribute TemporaryObject temporaryObject){
+        RedirectView redirectView = new RedirectView();
+
+        Applicant applicant = applicantService.getByIdentificationNumber(temporaryObject.getIdentificationNumber());
+        Long value = temporaryObject.getDateOfBirth().getTime();
+        Long value2 = applicant.getDateOfBirth().getTime();
+
+        // There may be a change in the date of birth after coming to the credit rating service
+        if(value.equals(value2)||value.equals(value2+75600000)){
+            redirectView.setUrl("http://localhost:8080/api/v1/credit/getCreditsByUser/"+temporaryObject.getIdentificationNumber());
+        }
+        return redirectView;
+    }
+
+    @GetMapping("/getCreditsByUser/{id}")
+    public ModelAndView getCreditByApplicant2(@PathVariable(name = "id") Long id){
+        ModelAndView mav = new ModelAndView("list-credits-for-user");
+        mav.addObject("credits",creditService.getCreditByApplicantId(id));
+        return mav;
+    }
+
 }
