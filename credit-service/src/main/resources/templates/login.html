@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login and Refistration Form</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .hero {
+        height: 100%;
+        width: 100%;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url(https://cobac.work/content/files/crm-muster-7b55b740.webp);
+        background-position: center;
+        background-size: cover;
+        position: absolute;
+      }
+      .submit-btn-2{
+        width: 178px;
+        text-align: center;
+        text-decoration: none;
+        font-family: sans-serif;
+        font-size: 13.3px;
+        padding: 10px 30px;
+        cursor: pointer;
+        display: block;
+        margin: 105px 75px 5px auto;
+        background: linear-gradient(to right, #ff105f, #ffad06);
+        border: 0;
+        outline: none;
+        border-radius: 30px;
+      }
+      .form-box {
+        width: 380px;
+        height: 480px;
+        position: relative;
+        margin: 6% auto;
+        background-color: #ffff;
+        padding: 5px;
+        overflow: hidden;
+      }
+      .button-box {
+        width: 110px;
+        margin: 35px auto;
+        position: relative;
+        box-shadow: 0 0 20px 9px #ff61241f;
+        border-radius: 30px;
+      }
+      .toggle-btn {
+        padding: 10px 30px;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        outline: none;
+        position: relative;
+      }
+      #btn {
+        top: 0;
+        left: 0;
+        position: absolute;
+        width: 110px;
+        height: 100%;
+        background: linear-gradient(to right, #ff105f, #ffad06);
+        border-radius: 30px;
+        transition: 0.5s;
+      }
+      .input-group {
+        top: 180px;
+        position: absolute;
+        width: 280px;
+        transition: 0.5s;
+      }
+      .input-field {
+        width: 100%;
+        padding: 10px 0;
+        margin: 5px 0;
+        border-left: 0;
+        border-top: 0;
+        border-right: 0;
+        border-bottom: 1px solid #999;
+        outline: none;
+        background: transparent;
+      }
+      .submit-btn {
+        width: 85%;
+        padding: 10px 30px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto 5px auto;
+        background: linear-gradient(to right, #ff105f, #ffad06);
+        border: 0;
+        outline: none;
+        border-radius: 30px;
+      }
+      .check-box {
+        margin: 30px 10px 20px 0;
+      }
+      label {
+        color: #777;
+        font-size: 12px;
+        bottom: 100px;
+        position: absolute;
+      }
+      #login {
+        left: 50px;
+      }
+      #register {
+        left: 450px;
+      }
+      .title {
+        width: 85%;
+        padding: 100px 110px;
+        display: block;
+        margin: auto;
+        color: #777;
+      }
+      a:visited{
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <div class="form-box">
+        <div class="title">
+          <h2>CRM System</h2>
+        </div>
+        <form id="login" class="input-group" method="post" th:action="@{/login}">
+          <input
+            type="text"
+            name="username"
+            class="input-field"
+            placeholder="Enter Username"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            class="input-field"
+            placeholder="Enter Password"
+            required
+          />
+          <button   type="submit" class="submit-btn">Log in</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
