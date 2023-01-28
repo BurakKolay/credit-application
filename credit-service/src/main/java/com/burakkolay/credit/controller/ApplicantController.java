@@ -4,12 +4,12 @@ import com.burakkolay.credit.config.RabbitMQConfig;
 import com.burakkolay.credit.model.entity.Applicant;
 import com.burakkolay.credit.model.DTO.ApplicantDTO;
 import com.burakkolay.credit.model.entity.RegisterObject;
-import com.burakkolay.credit.model.entity.TemporaryObject;
 import com.burakkolay.credit.repository.ApplicantRepository;
 import com.burakkolay.credit.services.ApplicantService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -86,7 +86,7 @@ public class ApplicantController {
 //        return applicantService.creditResultResponse(applicant);
 //    }
     /*******************************************************************************************************/
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/showList")
     public ModelAndView showApplicantList(){
         ModelAndView mav = new ModelAndView("list-applicants");
@@ -105,10 +105,10 @@ public class ApplicantController {
     @PostMapping("/saveApplicant")
     public RedirectView saveApplicant(@ModelAttribute ApplicantDTO applicantDTO){
         applicantService.create(applicantDTO);
-        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/applicant/showList");
+        RedirectView redirectView = new RedirectView("http://localhost:8080/");
         return redirectView;
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(path = "/deleteApplicant")
     public RedirectView deleteApplicant(@RequestParam Long applicantId){
         applicantService.delete(applicantId);
@@ -116,6 +116,7 @@ public class ApplicantController {
         return redirectView;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/showUpdateForm")
     public ModelAndView showUpdateForm(@RequestParam Long applicantId){
         ModelAndView mav = new ModelAndView("update-applicant-form");
@@ -124,8 +125,9 @@ public class ApplicantController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(path = "/updateApplicant/{applicantId}")
-    public RedirectView updateOwner(@PathVariable("applicantId")Long applicantId,@ModelAttribute ApplicantDTO applicantDTO){
+    public RedirectView updateApplicant(@PathVariable("applicantId")Long applicantId,@ModelAttribute ApplicantDTO applicantDTO){
         applicantService.update(applicantDTO,applicantId);
         RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/applicant/showList");
         return redirectView;
@@ -139,23 +141,8 @@ public class ApplicantController {
         //applicantService.applyToCredit(applicantIdNumber,assurance);
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,RabbitMQConfig.ROUTING_KEY,applicant);
         //applicantService.creditResultResponse(applicant);
-        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/credit/showList");
+        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/credit/getCreditsByUser/"+registerObject.getIdentificationNumber());
         return redirectView;
     }
 
-    @GetMapping("/addCreditForm")
-    public ModelAndView showAddCreditForm(){
-        ModelAndView mav = new ModelAndView("add-credit-form");
-        RegisterObject registerObject = new RegisterObject();
-        mav.addObject("dummy",registerObject);
-        return mav;
-    }
-
-    @GetMapping("/showCreditForm")
-    public ModelAndView showCreditForm(){
-        ModelAndView mav = new ModelAndView("find-credit");
-        TemporaryObject applicant = new TemporaryObject();
-        mav.addObject("applicant",applicant);
-        return mav;
-    }
 }

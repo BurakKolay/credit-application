@@ -4,11 +4,12 @@ package com.burakkolay.credit.controller;
 import com.burakkolay.credit.model.DTO.CreditDTO;
 import com.burakkolay.credit.model.entity.Applicant;
 import com.burakkolay.credit.model.entity.Credit;
-import com.burakkolay.credit.model.entity.TemporaryObject;
+import com.burakkolay.credit.model.entity.RegisterObject;
 import com.burakkolay.credit.services.ApplicantService;
 import com.burakkolay.credit.services.CreditService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -68,14 +69,14 @@ public class CreditController {
 //    }
 
     /*******************************************************************************************/
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/showList")
     public ModelAndView showCreditList(){
         ModelAndView mav = new ModelAndView("list-credits");
         mav.addObject("credits",creditService.getAllCredits());
         return mav;
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(path = "/deleteCredit")
     public RedirectView deleteCredit(@RequestParam Long creditId){
         creditService.delete(creditId);
@@ -84,16 +85,16 @@ public class CreditController {
     }
 
     @GetMapping("/getCreditByIdAndBirth")
-    public RedirectView getCreditByIdAndBirth(@ModelAttribute TemporaryObject temporaryObject){
+    public RedirectView getCreditByIdAndBirth(@ModelAttribute Applicant applicant){
         RedirectView redirectView = new RedirectView();
 
-        Applicant applicant = applicantService.getByIdentificationNumber(temporaryObject.getIdentificationNumber());
-        Long value = temporaryObject.getDateOfBirth().getTime();
-        Long value2 = applicant.getDateOfBirth().getTime();
+        Applicant applicant2 = applicantService.getByIdentificationNumber(applicant.getIdentificationNumber());
+        Long value = applicant.getDateOfBirth().getTime();
+        Long value2 = applicant2.getDateOfBirth().getTime();
 
         // There may be a change in the date of birth after coming to the credit rating service
         if(value.equals(value2)||value.equals(value2+75600000)){
-            redirectView.setUrl("http://localhost:8080/api/v1/credit/getCreditsByUser/"+temporaryObject.getIdentificationNumber());
+            redirectView.setUrl("http://localhost:8080/api/v1/credit/getCreditsByUser/"+applicant.getIdentificationNumber());
         }
         return redirectView;
     }
@@ -102,6 +103,22 @@ public class CreditController {
     public ModelAndView getCreditByApplicant2(@PathVariable(name = "id") Long id){
         ModelAndView mav = new ModelAndView("list-credits-for-user");
         mav.addObject("credits",creditService.getCreditByApplicantId(id));
+        return mav;
+    }
+
+    @GetMapping("/addCreditForm")
+    public ModelAndView showAddCreditForm(){
+        ModelAndView mav = new ModelAndView("add-credit-form");
+        RegisterObject registerObject = new RegisterObject();
+        mav.addObject("dummy",registerObject);
+        return mav;
+    }
+
+    @GetMapping("/showCreditForm")
+    public ModelAndView showCreditForm(){
+        ModelAndView mav = new ModelAndView("find-credit");
+        Applicant applicant = new Applicant();
+        mav.addObject("applicant",applicant);
         return mav;
     }
 
