@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sakarya5454
+    ports:
+      - "5432:5432"
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  sender:
+    build: ./credit-service
+    container_name: sender
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./sender:/app
+    depends_on:
+      - rabbitmq
+      - db
+  receiver:
+    build: ./credit-rating-service
+    container_name: receiver
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./receiver:/app
+    depends_on:
+      - sender
+      - rabbitmq
+      - db
