@@ -8,8 +8,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
-
 @Service
 public class ApplicantService {
     private final ApplicantRepository applicantRepository;
@@ -25,12 +23,13 @@ public class ApplicantService {
 
     @RabbitListener(queues = "credit-queue")
     public void processMessage(Applicant applicant){
-        Random randomRatingGenerator = new Random();
-        applicant.setCreditRating(randomRatingGenerator.nextInt(0,2000));
+
+        double random = Math.random();
+
+        applicant.setCreditRating((int) (random*2000));
         Applicant copyApplicant = applicant.deepCopy(applicant);
-
         creditRepository.saveAll(applicant.getCredit());
-
+        System.out.println(applicant.getCreditRating());
         applicantRepository.save(copyApplicant);
 
         sendMessage(applicant);
