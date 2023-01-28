@@ -13,8 +13,7 @@
 <!--<body th:style="'background:url('+ @{/images/v.jpg} +');'">-->
 
 <div class="center-screen">
-  <center>  <h1 class="form-signin-heading" style="color:white;">Welcome to Credit Center</h1> </center>
-  <form class="form-signin" method="get" th:action="@{/api/v1/applicant/showList}">
+  <form class="form-signin" method="get" th:action="@{/login}">
     <div class="form-group">
       <button class="btn btn-lg btn-primary btn-block" type="submit">Admin Panel</button>
     </div>
@@ -24,12 +23,12 @@
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
     </div>
   </form>
-  <form class="form-signin" method="get" th:action="@{/api/v1/applicant/addCreditForm}">
+  <form class="form-signin" method="get" th:action="@{/api/v1/credit/addCreditForm}">
     <div class="form-group">
       <button class="btn btn-lg btn-primary btn-block" type="submit">Apply to credit</button>
     </div>
   </form>
-  <form class="form-signin" method="get" th:action="@{/api/v1/applicant/showCreditForm}">
+  <form class="form-signin" method="get" th:action="@{/api/v1/credit/showCreditForm}">
     <div class="form-group">
       <button class="btn btn-lg btn-primary btn-block" type="submit">Find credit</button>
     </div>

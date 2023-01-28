@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>List of Owners</title>
+  <title>List of Credits</title>
   <link rel="stylesheet"
         type="text/css"
         href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
@@ -16,7 +16,6 @@
 <div class="container" style="max-width: 1340px">
   <h2>List of Credits</h2>
   <hr/>
-  <a th:href="@{/api/v1/applicant/addCreditForm}" class="btn btn-primary mb-2">Add Credit</a>
   <table class="table table-striped" id="credit">
 
     <thead>
@@ -27,7 +26,6 @@
       <th>Credit Balance</th>
       <th>Credit Result</th>
       <th>Created Date</th>
-      <th style="text-align: center">Actions</th>
     </tr>
 
     </thead>
@@ -39,14 +37,6 @@
       <td th:text="${credit.creditBalance}"/>
       <td th:text="${credit.creditResult}"/>
       <td type="date" pattern="yyyy-MM-dd" th:text="${credit.creationDate}"/>
-
-
-      <td>
-<!--        <a th:href="@{/api/v1/applicant/showUpdateForm(applicantId=${applicant.id})}" class="btn btn-info">Update</a>-->
-        <a th:href="@{/api/v1/credit/deleteCredit(creditId=${credit.id})}" class="btn btn-info">Delete</a>
-        <!--                <a th:href="@{/api/v1/pet/addPetForm(id=${owner.id})}" class="btn btn-info">Add Pet</a>-->
-        <!--                <a th:href="@{/api/v1/pet/showOwnerPetsForm(id=${owner.id})}" class="btn btn-info">Show Pets</a>-->
-      </td>
     </tr>
 
     </tbody>
