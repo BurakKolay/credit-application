@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="container">
-    <h2>Add Credit</h2>
+    <h2>Apply to Credit</h2>
     <hr/>
     <form th:action="@{/api/v1/applicant/apply}" th:object="${dummy}" method="post">
 
@@ -21,7 +21,7 @@
         <button class="btn btn-primary col-2" type="submit">Save</button>
     </form>
     <hr/>
-    <a th:href="@{/api/v1/credit/showList}">Back to list</a>
+    <a th:href="@{/}">Back to home</a>
 </div>
 </body>
 </html>
