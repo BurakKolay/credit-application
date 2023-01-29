@@ -4,7 +4,6 @@ import com.burakkolay.credit.config.RabbitMQConfig;
 import com.burakkolay.credit.model.entity.Applicant;
 import com.burakkolay.credit.model.DTO.ApplicantDTO;
 import com.burakkolay.credit.model.entity.RegisterObject;
-import com.burakkolay.credit.repository.ApplicantRepository;
 import com.burakkolay.credit.services.ApplicantService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
@@ -22,16 +21,14 @@ import java.util.List;
 public class ApplicantController {
 
 
-    private ApplicantService applicantService;
-    private RabbitTemplate rabbitTemplate;
-    private final ApplicantRepository applicantRepository;
+    private final ApplicantService applicantService;
+    private final RabbitTemplate rabbitTemplate;
 
 
-    public ApplicantController(ApplicantService applicantService, RabbitTemplate rabbitTemplate,
-                               ApplicantRepository applicantRepository) {
+
+    public ApplicantController(ApplicantService applicantService, RabbitTemplate rabbitTemplate) {
         this.applicantService = applicantService;
         this.rabbitTemplate = rabbitTemplate;
-        this.applicantRepository = applicantRepository;
     }
 
     @GetMapping("/all")
@@ -46,12 +43,6 @@ public class ApplicantController {
         Applicant byId = applicantService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(byId);
     }
-
-//    @GetMapping("/byIn/{in}")
-//    public ResponseEntity getApplicantByIdentificationNumber(@PathVariable("in") Long identificationNumber) {
-//        Optional<Applicant> byIn = applicantService.getByIdentificationNumber(identificationNumber);
-//        return ResponseEntity.status(HttpStatus.OK).body(byIn);
-//    }
 
     @PostMapping("/create")
     public ResponseEntity createNewApplicant(@RequestBody ApplicantDTO applicantDTO) {
@@ -76,15 +67,6 @@ public class ApplicantController {
         return ResponseEntity.status(HttpStatus.OK).body("Related applicant updated successfully");
     }
 
-
-//    @PutMapping(value = {"/apply/{id}/{assurance}","/apply/{id}"})
-//    public ResponseEntity applyToCredit2(@PathVariable(name = "id") Long applicantId,@PathVariable(name = "assurance",required = false) Double assurance){
-//
-//        Applicant applicant=applicantService.getById(applicantId);
-//        applicantService.applyToCredit(applicantId,assurance);
-//        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,RabbitMQConfig.ROUTING_KEY,applicant);
-//        return applicantService.creditResultResponse(applicant);
-//    }
     /*******************************************************************************************************/
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/showList")
@@ -105,15 +87,13 @@ public class ApplicantController {
     @PostMapping("/saveApplicant")
     public RedirectView saveApplicant(@ModelAttribute ApplicantDTO applicantDTO){
         applicantService.create(applicantDTO);
-        RedirectView redirectView = new RedirectView("http://localhost:8080/");
-        return redirectView;
+        return new RedirectView("http://localhost:8080/");
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(path = "/deleteApplicant")
     public RedirectView deleteApplicant(@RequestParam Long applicantId){
         applicantService.delete(applicantId);
-        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/applicant/showList");
-        return redirectView;
+        return new RedirectView("http://localhost:8080/api/v1/applicant/showList");
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -129,8 +109,7 @@ public class ApplicantController {
     @RequestMapping(path = "/updateApplicant/{applicantId}")
     public RedirectView updateApplicant(@PathVariable("applicantId")Long applicantId,@ModelAttribute ApplicantDTO applicantDTO){
         applicantService.update(applicantDTO,applicantId);
-        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/applicant/showList");
-        return redirectView;
+        return new RedirectView("http://localhost:8080/api/v1/applicant/showList");
     }
 
     @PostMapping(value = {"/apply"})
@@ -141,8 +120,7 @@ public class ApplicantController {
         //applicantService.applyToCredit(applicantIdNumber,assurance);
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,RabbitMQConfig.ROUTING_KEY,applicant);
         //applicantService.creditResultResponse(applicant);
-        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/credit/getCreditsByUser/"+registerObject.getIdentificationNumber());
-        return redirectView;
+        return new RedirectView("http://localhost:8080/api/v1/credit/getCreditsByUser/"+registerObject.getIdentificationNumber());
     }
 
 }

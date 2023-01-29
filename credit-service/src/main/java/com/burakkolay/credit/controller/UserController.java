@@ -14,8 +14,7 @@ public class UserController {
 
     @GetMapping("/login")
     public ModelAndView getLoginPage() {
-        ModelAndView mav = new ModelAndView("login");
-        return mav;
+        return new ModelAndView("login");
     }
 
 }

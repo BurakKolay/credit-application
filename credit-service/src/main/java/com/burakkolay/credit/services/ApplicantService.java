@@ -97,7 +97,7 @@ public class ApplicantService {
         addCreditToApplicant(credit,id);
     }
 
-    public Applicant update(ApplicantDTO applicantDTO,Long id){
+    public void update(ApplicantDTO applicantDTO, Long id){
             Applicant byId = getById(id);
 
             byId.setMonthlyIncome(applicantDTO.getMonthlyIncome());
@@ -106,7 +106,7 @@ public class ApplicantService {
             byId.setPhoneNumber(applicantDTO.getPhoneNumber());
             byId.setIdentificationNumber(applicantDTO.getIdentificationNumber());
 
-        return applicantRepository.save(byId);
+        applicantRepository.save(byId);
     }
 
     public Applicant getByIdentificationNumber(Long identificationNumber){

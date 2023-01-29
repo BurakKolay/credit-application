@@ -62,12 +62,6 @@ public class CreditController {
         return ResponseEntity.status(HttpStatus.CREATED).body(applicant.getCredit().get(applicant.getCredit().size()-1));
     }
 
-//    @DeleteMapping("/delete/{id}")
-//    public ResponseEntity deleteCredit2(@PathVariable(name = "id") Long id) {
-//        //creditService.delete(id);
-//        return ResponseEntity.status(HttpStatus.OK).body("Related credit deleted successfully");
-//    }
-
     /*******************************************************************************************/
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/showList")
@@ -80,8 +74,7 @@ public class CreditController {
     @RequestMapping(path = "/deleteCredit")
     public RedirectView deleteCredit(@RequestParam Long creditId){
         creditService.delete(creditId);
-        RedirectView redirectView = new RedirectView("http://localhost:8080/api/v1/credit/showList");
-        return redirectView;
+        return new RedirectView("http://localhost:8080/api/v1/credit/showList");
     }
 
     @GetMapping("/getCreditByIdAndBirth")
