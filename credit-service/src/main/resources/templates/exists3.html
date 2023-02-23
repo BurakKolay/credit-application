@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>exists already!</title>
+  </head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-family: sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(to left,#AEE2Ff,#F2CD5C);
+    }
+
+    header {
+      width: 100%;
+      height: 5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #350035;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+    }
+
+    section {
+      margin: 2rem auto;
+      max-width: 30rem;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+      border-radius: 12px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    input,
+    textarea {
+      font: inherit;
+      display: block;
+      width: 100%;
+      padding: 0.15rem;
+      border: 1px solid #ccc;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #350035;
+      outline: none;
+      background-color: #ffe6ff;
+    }
+
+    button {
+      cursor: pointer;
+      font: inherit;
+      border: 1px solid #350035;
+      background-color: #350035;
+      color: white;
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+    }
+  </style>
+  <body>
+    <main>
+      <section>
+        <h2>Identification number and phone number needs to be unique</h2>
+        <p>Please enter your credentials  again.</p>
+        <p><a th:href="@{/api/v1/applicant/addApplicantForm}">Go Back</a></p>
+      </section>
+    </main>
+  </body>
+</html>
