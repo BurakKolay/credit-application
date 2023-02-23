@@ -27,6 +27,7 @@ services:
       - db
   receiver:
     build: ./credit-rating-service
+
     container_name: receiver
     ports:
       - "8081:8081"

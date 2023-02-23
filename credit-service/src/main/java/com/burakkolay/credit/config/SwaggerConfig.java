@@ -16,7 +16,7 @@ public class SwaggerConfig {
     public Docket customDocket() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.egecoskun.finalproject.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.burakkolay.credit.controller"))
                 .build().apiInfo(apiInfo());
     }
 
@@ -26,7 +26,7 @@ public class SwaggerConfig {
                 "Credit application system simulation",
                 "v1",
                 "Terms of service",
-                "egecoskun4@gmail.com",
+                "burakkolay487@gmail.com",
                 "License of MIT",
                 "xxxxx");
     }

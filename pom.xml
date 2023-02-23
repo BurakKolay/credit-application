@@ -8,7 +8,7 @@
         <version>3.0.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>egecoskun.com</groupId>
+    <groupId>burakkolay.com</groupId>
     <artifactId>credit-microservices</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>credit-microservices</name>

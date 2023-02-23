@@ -18,5 +18,7 @@ public interface CreditRepository extends JpaRepository<Credit,Long> {
     @Query(value = "SELECT * FROM credit WHERE applicant_id=(SELECT id FROM applicant WHERE identification_number=(:id))",nativeQuery = true)
     List<Credit> getCreditsByApplicantId(@Param("id")Long id);
 
+    @Query(value = "SELECT * FROM credit ORDER BY id", nativeQuery = true)
+    List<Credit> getAllCreditsOrderedById();
 
 }

@@ -14,4 +14,8 @@ public interface ApplicantRepository extends JpaRepository<Applicant,Long> {
 
     @Query(value = "SELECT * FROM applicant WHERE id= (SELECT applicant_id FROM credit WHERE id= (:creditId))",nativeQuery = true)
     Applicant getApplicantFromCreditId(@Param("creditId")Long creditId);
+
+    boolean existsApplicantByIdentificationNumber(Long identificationNumber);
+
+    boolean existsApplicantByPhoneNumber(String phoneNumber);
 }
