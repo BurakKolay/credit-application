@@ -32,10 +32,10 @@ public class ApplicantController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity getAllApplicants() {
+    public List<Applicant> getAllApplicants() {
         List<Applicant> allApplicants = applicantService.getAllApplicants();
 
-        return ResponseEntity.ok(allApplicants);
+        return allApplicants;
     }
 
     @GetMapping("/{id}")
@@ -86,8 +86,20 @@ public class ApplicantController {
 
     @PostMapping("/saveApplicant")
     public RedirectView saveApplicant(@ModelAttribute ApplicantDTO applicantDTO){
-        applicantService.create(applicantDTO);
-        return new RedirectView("http://localhost:8080/");
+        RedirectView redirectView = new RedirectView();
+        if(applicantService.isApplicantExistsWithIdentificationNumber(applicantDTO.getIdentificationNumber()) || applicantService.isApplicantExistsWithPhoneNumber(applicantDTO.getPhoneNumber()) ){
+            redirectView.setUrl("http://localhost:8080/api/v1/applicant/applicantAlreadyExists");
+        }else{
+            applicantService.create(applicantDTO);
+            redirectView.setUrl("http://localhost:8080/");
+        }
+        return redirectView;
+    }
+
+    @GetMapping("/applicantAlreadyExists")
+    public ModelAndView applicantAlreadyExists(){
+        ModelAndView mav = new ModelAndView("exists3");
+        return mav;
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(path = "/deleteApplicant")
@@ -114,13 +126,22 @@ public class ApplicantController {
 
     @PostMapping(value = {"/apply"})
     public RedirectView applyToCredit(@ModelAttribute RegisterObject registerObject){
+        RedirectView redirectView = new RedirectView();
+        if(applicantService.isApplicantExistsWithIdentificationNumber(registerObject.getIdentificationNumber())){
+            Applicant applicant=applicantService.getByIdentificationNumber(registerObject.getIdentificationNumber());
+            applicantService.applyCreditToApplicant(registerObject.getIdentificationNumber(), registerObject.getAssurance());
+            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,RabbitMQConfig.ROUTING_KEY,applicant);
+            redirectView.setUrl("http://localhost:8080/api/v1/credit/getCreditsByUser/"+registerObject.getIdentificationNumber());
+        }else{
+            redirectView.setUrl("http://localhost:8080/api/v1/applicant/applicantDoesNotExists");
+        }
+        return redirectView;
+    }
 
-        Applicant applicant=applicantService.getByIdentificationNumber(registerObject.getIdentificationNumber());
-        applicantService.applyCreditToApplicant(registerObject.getIdentificationNumber(), registerObject.getAssurance());
-        //applicantService.applyToCredit(applicantIdNumber,assurance);
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE,RabbitMQConfig.ROUTING_KEY,applicant);
-        //applicantService.creditResultResponse(applicant);
-        return new RedirectView("http://localhost:8080/api/v1/credit/getCreditsByUser/"+registerObject.getIdentificationNumber());
+    @GetMapping("/applicantDoesNotExists")
+    public ModelAndView birtDateAndIdentificationNumberCheckFail() {
+        ModelAndView mav = new ModelAndView("exists2");
+        return mav;
     }
 
 }
