@@ -9,23 +9,28 @@
         crossorigin="anonymous">
 </head>
 <body>
+<style>
+  body{
+    background: linear-gradient(to left,#AEE2Ff,#F2CD5C);
+  }
+</style>
 <div class="container">
   <h2>Update Applicant</h2>
   <hr/>
   <form  th:action="@{/api/v1/applicant/updateApplicant/}+${applicant.id}" th:object="${applicant}" method="put">
     <input name="_method" type="hidden" value="put" />
 
-    <input type="text" th:field="*{identificationNumber}" placeholder="Enter identification number" class="form-control col-4 mb-4" />
+    <input type="text" readonly th:field="*{identificationNumber}" placeholder="Enter identification number" class="form-control col-4 mb-4" />
 
     <input type="text" th:field="*{firstName}" placeholder="Enter first name" class="form-control col-4 mb-4" />
 
     <input type="text" th:field="*{lastName}" placeholder="Enter last name" class="form-control col-4 mb-4" />
 
-    <input type="text" th:field="*{phoneNumber}" placeholder="Enter phone number" class="form-control col-4 mb-4" />
+    <input type="text" readonly th:field="*{phoneNumber}" placeholder="Enter phone number" class="form-control col-4 mb-4" />
 
     <input type="text" th:field="*{monthlyIncome}" placeholder="Enter salary" class="form-control col-4 mb-4" />
 
-    <input type="date" pattern="yyyy-MM-dd" th:field="*{dateOfBirth}" placeholder="Enter birthday" class="form-control col-4 mb-4" />
+    <input type="date" readonly pattern="yyyy-MM-dd" th:field="*{dateOfBirth}" placeholder="Enter birthday" class="form-control col-4 mb-4" />
 
 
     <button class="btn btn-primary col-2" type="submit">Update</button>
