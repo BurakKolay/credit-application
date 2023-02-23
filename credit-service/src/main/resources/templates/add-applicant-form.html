@@ -9,22 +9,27 @@
           crossorigin="anonymous">
 </head>
 <body>
+<style>
+    body{
+        background: linear-gradient(to left,#AEE2Ff,#F2CD5C);
+    }
+</style>
 <div class="container">
     <h2>Sign Up</h2>
     <hr/>
     <form th:action="@{/api/v1/applicant/saveApplicant}" th:object="${applicant}" method="POST">
 
-        <input type="text" min="11" max="11" th:field="*{identificationNumber}" placeholder="Enter identification number" class="form-control col-4 mb-4" />
+        <input type="text" min="11" max="11" required th:field="*{identificationNumber}" placeholder="Enter identification number" class="form-control col-4 mb-4" />
 
-        <input type="text" th:field="*{firstName}" placeholder="Enter first name" class="form-control col-4 mb-4" />
+        <input type="text" required th:field="*{firstName}" placeholder="Enter first name" class="form-control col-4 mb-4" />
 
-        <input type="text" th:field="*{lastName}" placeholder="Enter last name" class="form-control col-4 mb-4" />
+        <input type="text" required th:field="*{lastName}" placeholder="Enter last name" class="form-control col-4 mb-4" />
 
-        <input type="text" th:field="*{phoneNumber}" placeholder="Enter phone number" class="form-control col-4 mb-4" />
+        <input type="text" required pattern="[+]{1}?[9]{1}?[0]{1}?[0-9]{10}" th:field="*{phoneNumber}" title="Please start +90 your phone number" placeholder="Enter phone number" class="form-control col-4 mb-4" />
 
-        <input type="text" th:field="*{monthlyIncome}" placeholder="Enter salary" class="form-control col-4 mb-4" />
+        <input type="text" required th:field="*{monthlyIncome}" placeholder="Enter salary" class="form-control col-4 mb-4" />
 
-        <input type="date" pattern="yyyy-MM-dd" th:field="*{dateOfBirth}" placeholder="Enter birthday" class="form-control col-4 mb-4" />
+        <input type="date" required pattern="yyyy-MM-dd" th:field="*{dateOfBirth}" placeholder="Enter birthday" class="form-control col-4 mb-4" />
 
         <button class="btn btn-primary col-2" type="submit">Save</button>
     </form>

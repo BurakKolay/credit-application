@@ -8,6 +8,11 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
 </head>
+<style>
+    body{
+        background: linear-gradient(to left,#AEE2Ff,#F2CD5C);
+    }
+</style>
 <body>
 <div class="container">
     <h2>Search Credit</h2>
@@ -18,7 +23,7 @@
 
         <input type="date" th:field="*{dateOfBirth}" placeholder="Enter birthday" class="form-control col-4 mb-4" />
 
-        <button class="btn btn-primary col-2" type="submit">Save</button>
+        <button class="btn btn-primary col-2" type="submit">Search</button>
     </form>
     <hr/>
     <a th:href="@{/}">Back to Home</a>

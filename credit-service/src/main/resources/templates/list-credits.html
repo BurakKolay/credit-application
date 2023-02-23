@@ -13,6 +13,11 @@
         crossorigin="anonymous">
 </head>
 <body>
+<style>
+  body{
+    background: linear-gradient(to left,#AEE2Ff,#F2CD5C);
+  }
+</style>
 <div class="container" style="max-width: 1340px">
   <h2>List of Credits</h2>
   <hr/>
@@ -55,9 +60,31 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
 <script>
-  $(document).ready(function (){
-    $("#credit").DataTable();
-  })
+
+  $(document).ready(function() {
+    var table = $('#credit').DataTable({
+      columns: [
+        { title: "ID" },
+        { title: "Assurance" },
+        { title: "Credit Balance" },
+        { title: "Credit Result" },
+        { title: "Created Date" }
+      ],
+      ajax: {
+        url: "/api/v1/credit/all",
+        dataSrc: function(credits) {
+          var tableData = credits.map(function(record) {
+            return [record.id, record.assurance, record.creditBalance,record.creditResult,record.creationDate];
+          });
+          return tableData;
+        }
+      }
+    });
+
+    setInterval( function () {
+      table.ajax.reload();
+    }, 5000 );
+  });
 </script>
 </body>
 </html>
