@@ -18,4 +18,6 @@ public interface ApplicantRepository extends JpaRepository<Applicant,Long> {
     boolean existsApplicantByIdentificationNumber(Long identificationNumber);
 
     boolean existsApplicantByPhoneNumber(String phoneNumber);
+
+    void deleteById(Long id);
 }
