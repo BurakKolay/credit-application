@@ -78,7 +78,7 @@ public class CreditController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(path = "/deleteCredit")
+    @DeleteMapping(path = "/deleteCredit")
     public RedirectView deleteCredit(@RequestParam Long creditId){
         creditService.delete(creditId);
         return new RedirectView("http://localhost:8080/api/v1/credit/showList");

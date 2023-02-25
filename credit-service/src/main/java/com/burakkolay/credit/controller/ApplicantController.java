@@ -102,7 +102,7 @@ public class ApplicantController {
         return mav;
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(path = "/deleteApplicant")
+    @DeleteMapping(path = "/deleteApplicant")
     public RedirectView deleteApplicant(@RequestParam Long applicantId){
         applicantService.delete(applicantId);
         return new RedirectView("http://localhost:8080/api/v1/applicant/showList");
@@ -118,7 +118,7 @@ public class ApplicantController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(path = "/updateApplicant/{applicantId}")
+    @PutMapping(path = "/updateApplicant/{applicantId}")
     public RedirectView updateApplicant(@PathVariable("applicantId")Long applicantId,@ModelAttribute ApplicantDTO applicantDTO){
         applicantService.update(applicantDTO,applicantId);
         return new RedirectView("http://localhost:8080/api/v1/applicant/showList");
