@@ -29,6 +29,7 @@ public class CreditService {
     public List<Credit> getAllCreditsOrderedById(){
         return creditRepository.getAllCreditsOrderedById();
     }
+
     public Credit getById(Long id) {
         Optional<Credit> byId = creditRepository.findById(id);
         return byId.orElseThrow(() -> {
