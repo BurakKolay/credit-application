@@ -22,15 +22,21 @@ It is a restful credit application system that receives credit application reque
 
 ## Main Page
 ![image](https://user-images.githubusercontent.com/107641642/221438230-6d20b88a-2761-471c-a6a9-93c456c75344.png)
+
 ## Admin Panel 1
 ![image](https://user-images.githubusercontent.com/107641642/221438240-e957d1c1-1518-414c-b26e-0a6630ba0fdc.png)
+
 ## Admin Panel 2
 ![image](https://user-images.githubusercontent.com/107641642/221438249-1f8bba71-eb47-4f11-9090-965a8440f2c7.png)
+
+## Sign Up
 ![image](https://user-images.githubusercontent.com/107641642/221438267-554a24c1-d655-40f1-b725-73331260ec96.png)
+
+## Apply To Credit
 ![image](https://user-images.githubusercontent.com/107641642/221438282-e265c4cc-9fd6-462d-8fac-e5bad3916124.png)
+
+## Search Credit
 ![image](https://user-images.githubusercontent.com/107641642/221438293-931ab734-05d4-4ac7-8ba3-8de92eaee6f0.png)
-
-
 
 
 ## Swagger
