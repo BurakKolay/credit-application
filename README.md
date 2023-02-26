@@ -12,6 +12,16 @@ It is a restful credit application system that receives credit application reque
 * As a result of the conclusion of the credit, the relevant application is recorded in the database. Afterwards, an informative SMS is sent to the relevant phone number and the approval status information (rejection or approval), limit information is returned from the endpoint.
 * A completed loan application can only be queried with the ID number and date of birth. If the date of birth and identity information do not match, it should not be questioned.
 
+## Used technologies
+* Java
+* Spring Boot
+* Thymeleaf
+* HTML5/CSS3
+* RabbitMQ
+* Docker
+* PostgreSQL
+* Mockito
+
 ## How does it work
 
 * Enter the file directory of the project
